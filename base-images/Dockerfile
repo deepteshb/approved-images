@@ -1,9 +1,7 @@
-# 1. Declare the argument name
-ARG BASE_FLAVOR
+# 1. Expect a single, full image URL passed from Jenkins
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
 
-# 2. Use the exact Red Hat registry URL and include the '$' before the braces
-FROM ://redhat.com{BASE_FLAVOR}
-
-# Add your custom layers below
+# 2. Add your custom configurations
 LABEL maintainer="Approved Images Team"
-RUN echo "Successfully building from base flavor: ${BASE_FLAVOR}"
+RUN echo "Building image using parent: ${BASE_IMAGE}"

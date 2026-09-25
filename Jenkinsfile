@@ -20,19 +20,16 @@ pipeline {
                     stage("Build & Tag") {
                         steps {
                             script {
-                                // Define the naming convention based on the matrix axis
-                                def baseImageFlavor = "${UBI_VERSION}-standard"
+                                // Red Hat UBI image paths are structured as ://redhat.com or /ubi
+                                // We construct the full registry path cleanly in Jenkins
+                                def fullRedHatUrl = "://redhat.com{UBI_VERSION}/ubi"
                                 def targetImageName = "${UBI_VERSION}-nsw-std"
                                 
-                                echo "Starting parallel build for: ${targetImageName} with Build ID: ${env.BUILD_ID}"
+                                echo "Triggering build for ${targetImageName} from parent path: ${fullRedHatUrl}"
                                 
-                                // Navigate to the base images directory
-                                dir('base-images') {
-                                    // Build the docker image passing the base flavor and tagging with the unique build ID
-                                    sh "docker build --build-arg BASE_FLAVOR=${baseImageFlavor} -t ${targetImageName}:${env.BUILD_ID} ."
-                                    
-                                    // Optional: Verify the image built successfully
-                                    sh "docker images | grep ${targetImageName}"
+                                dir('approved-images/base-images') {
+                                    // Pass the full registry URL straight to the Dockerfile
+                                    sh "docker build --build-arg BASE_IMAGE=${fullRedHatUrl} -t ${targetImageName}:${env.BUILD_ID} ."
                                 }
                             }
                         }
