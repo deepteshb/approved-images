@@ -1,11 +1,9 @@
-# 1. Define the argument BEFORE the FROM directive so it is accessible globally
-ARG BASE_FLAVOR
+# Define the build argument before the FROM statement
+ARG BASE_FLAVOR=ubi9-standard
 
-# 2. Pull from Red Hat's official UBI registry dynamically
+# Use the dynamic argument to fetch the base image from Red Hat
 FROM ://redhat.com{BASE_FLAVOR}
 
-# 3. Add your standard corporate setups or layers here
-LABEL maintainer="Your Team Name"
-RUN echo "Building flavor: ${BASE_FLAVOR}"
-
-# ... rest of your build commands ...
+# Add your custom labels or configuration layers below
+LABEL maintainer="Approved Images Team"
+RUN echo "Successfully building from base flavor: ${BASE_FLAVOR}"
