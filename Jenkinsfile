@@ -27,7 +27,7 @@ pipeline {
                                 echo "Starting parallel build for: ${targetImageName} with Build ID: ${env.BUILD_ID}"
                                 
                                 // Navigate to the base images directory
-                                dir('approved-images/base-images') {
+                                dir('base-images') {
                                     // Build the docker image passing the base flavor and tagging with the unique build ID
                                     sh "docker build --build-arg BASE_FLAVOR=${baseImageFlavor} -t ${targetImageName}:${env.BUILD_ID} ."
                                     
