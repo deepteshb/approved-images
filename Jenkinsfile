@@ -20,17 +20,14 @@ pipeline {
                     stage("Build & Tag") {
                         steps {
                             script {
-                                // Red Hat UBI image paths are structured as ://redhat.com or /ubi
-                                // We construct the full registry path cleanly in Jenkins
+                                // Explicitly evaluate the variables with double quotes and dollar signs
                                 def fullRedHatUrl = "://redhat.com{UBI_VERSION}/ubi"
                                 def targetImageName = "${UBI_VERSION}-nsw-std"
                                 
                                 echo "Triggering build for ${targetImageName} from parent path: ${fullRedHatUrl}"
                                 
-                                dir('approved-images/base-images') {
-                                    // Pass the full registry URL straight to the Dockerfile
-                                    sh "docker build --build-arg BASE_IMAGE=${fullRedHatUrl} -t ${targetImageName}:${env.BUILD_ID} ."
-                                }
+                                // Point directly to the Dockerfile from the root workspace using -f
+                                sh "docker build --build-arg BASE_IMAGE=${fullRedHatUrl} -t ${targetImageName}:${env.BUILD_ID} -f approved-images/base-images/Dockerfile approved-images/base-images/"
                             }
                         }
                     }
